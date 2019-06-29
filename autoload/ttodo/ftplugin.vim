@@ -144,30 +144,7 @@ endf
 function! ttodo#ftplugin#Note() abort "{{{3
     let line = getline('.')
     let task = ttodo#ParseTask(line, expand('%:p'))
-    Tlibtrace 'ttodo', task
-    let nname = get(task.lists, 0, 'misc')
-    let nname = substitute(nname, '\W', '_', 'g')
-    let date = strftime('%Y%m%d')
-    let year = strftime('%Y')
-    let dir = expand('%:p:h')
-    Tlibtrace 'ttodo', nname, dir
-    let fargs = {'name': nname, 'date': date, 'year': year, 'index': 0}
-    while 1
-        let shortname = tlib#string#Format(g:ttodo#ftplugin#notefmt, fargs, '$')
-        let filename = tlib#file#Join([dir, shortname])
-        if filereadable(filename)
-            let fargs.n += 1
-        else
-            let notename = ttodo#GetOption('note_prefix', g:ttodo#ftplugin#note_prefix) . shortname
-            break
-        endif
-    endwh
-    Tlibtrace 'ttodo', filename
-    call setline('.', join([line, notename]))
-    call tlib#dir#Ensure(fnamemodify(filename, ':p:h'))
-    if !empty(g:ttodo#ftplugin#edit_note)
-        exec g:ttodo#ftplugin#edit_note fnameescape(filename)
-    endif
+    call ttodo#note#New(task)
 endf
 
 
