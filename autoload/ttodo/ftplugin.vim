@@ -4,40 +4,6 @@
 " @Last Change: 2019-02-07
 " @Revision:    471
 
-
-if !exists('g:ttodo#ftplugin#notefmt')
-    if exists('g:ttodo#ftplugin#notef') " && g:ttodo#ftplugin#notef !=# 'notes/%s/%s-%s.md'
-        let g:ttodo#ftplugin#notefmt = printf(g:ttodo#ftplugin#notef, '${name}', '${date}', '${index}')
-    else
-        let g:ttodo#ftplugin#notefmt = 'notes/${year}/${name}/${date}-${index}.md'   "{{{2
-    endif
-endif
-
-
-if !exists('g:ttodo#ftplugin#note_prefix')
-    " OPTION: note_prefix:PREFIX
-    "
-    " Prefix for references to notes.
-    "
-    " Possible (potentially useful) values:
-    "   - todo:// (opens the file in SimpleTask)
-    "   - root:// (SimpleTask: path relative to todo.txt file)
-    "   - file:// (less useful since it would require an absolute path)
-    let g:ttodo#ftplugin#note_prefix = 'root://'   "{{{2
-endif
-
-
-if !exists('g:ttodo#ftplugin#edit_note')
-    " If non-empty, edit a newly added reference to a note right away.
-    "
-    " Possible (potentially useful) values:
-    "   - split
-    "   - hide edit
-    "   - tabedit
-    let g:ttodo#ftplugin#edit_note = ''   "{{{2
-endif
-
-
 if !exists('g:ttodo#ftplugin#add_at_eof')
     " OPTION: add_at_eof:VALUE
     "
@@ -140,13 +106,11 @@ function! ttodo#ftplugin#ArchiveCurrentBuffer() abort "{{{3
     edit
 endf
 
-
 function! ttodo#ftplugin#Note() abort "{{{3
     let line = getline('.')
     let task = ttodo#ParseTask(line, expand('%:p'))
     call ttodo#note#New(task)
 endf
-
 
 " Values for copytags:
 "   1 ... Copy tags
