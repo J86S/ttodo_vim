@@ -24,19 +24,23 @@ function! ttodo#note#New(task) abort
 	Tlibtrace 'ttodo', filename
 	call tlib#dir#Ensure(fnamemodify(filename, ':p:h'))
 	let msg = s:initial_message(a:task)
-	echo type(msg)
-	echo msg
 	call writefile(msg,fnameescape(filename))
 
 	if !empty(g:ttodo#ftplugin#edit_note)
-		exec g:ttodo#ftplugin#edit_note fnameescape(filename)
+		silent exec g:ttodo#ftplugin#edit_note fnameescape(filename)
 	endif
 
 endfun
 
 function! s:initial_message(task)
 	let id = get(a:task,"id","none")
-	let msg = ['Log file for task ID: ' . id]
+	let timestamp = strftime('%d-%m-%Y %I:%M %p')
+	
+	let msg = ['---', 
+				\    'tittle: Log file for task ID: ' . id,
+				\    'createdOn: ' . timestamp,
+				\    '---'
+				\]
   return msg
 endfunction
 
