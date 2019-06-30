@@ -7,30 +7,30 @@ if !exists('g:ttodo#ftplugin#edit_note')
 	"   - split
 	"   - hide edit
 	"   - tabedit
-	let g:ttodo#ftplugin#edit_note = ''
+	let g:ttodo#ftplugin#edit_note = 'split +$'
 endif
 " }}}
 
 function! ttodo#note#New(task) abort
-	Tlibtrace 'ttodo', task
-	let filename = s:generate_path(a:task)
-
-	if s:note_exists(filename) == 1
-		echohl WarningMsg
-		throw 'Ttodo: Task note already exists'
-		echohl NONE
-	endif
-
-	Tlibtrace 'ttodo', filename
-	call tlib#dir#Ensure(fnamemodify(filename, ':p:h'))
+	"Tlibtrace 'ttodo', a:task
+	let path = s:generate_path(a:task)
+	call tlib#dir#Ensure(fnamemodify(path, ':p:h'))
 	let msg = s:initial_message(a:task)
-	call writefile(msg,fnameescape(filename))
+	call writefile(msg,fnameescape(path))
 
 	if !empty(g:ttodo#ftplugin#edit_note)
-		silent exec g:ttodo#ftplugin#edit_note fnameescape(filename)
+		silent exec g:ttodo#ftplugin#edit_note fnameescape(path)
 	endif
-
 endfun
+
+function! ttodo#note#Exists(task) abort
+	let path = s:generate_path(a:task)
+	return filereadable(path)
+endfunction
+
+function! ttodo#note#Log(task) abort
+	let log tlib#string#Input('message: ')
+endfunction
 
 function! s:initial_message(task)
 	let id = get(a:task,"id","none")
@@ -54,8 +54,4 @@ function! s:generate_path(task) abort
 	let dir = expand('%:p:h')
 	let path = tlib#file#Join([dir,"notes",id . ".md"])
 	return path
-endfun
-
-function! s:note_exists(path) abort
-	return filereadable(a:path)
 endfun
