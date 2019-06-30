@@ -16,6 +16,7 @@ function! ttodo#note#New(task) abort
 	let path = s:generate_path(a:task)
 	call tlib#dir#Ensure(fnamemodify(path, ':p:h'))
 	let msg = s:initial_message(a:task)
+	"TODO: Error handling
 	call writefile(msg,fnameescape(path))
 
 	if !empty(g:ttodo#ftplugin#edit_note)
@@ -29,7 +30,11 @@ function! ttodo#note#Exists(task) abort
 endfunction
 
 function! ttodo#note#Log(task) abort
-	let log tlib#string#Input('message: ')
+	let log = tlib#string#Input('message: ')
+	let timestamp = strftime("%T@%d-%m-%Y")
+	let msg = timestamp . ": " . log
+	let path = s:generate_path(a:task)
+	call writefile([msg],fnameescape(path))
 endfunction
 
 function! s:initial_message(task)
