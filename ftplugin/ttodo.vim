@@ -27,6 +27,7 @@ exec 'nnoremap <buffer>' g:ttodo#mapleader .'P :<C-U>call ttodo#ftplugin#Duplica
 exec 'nnoremap <buffer>' g:ttodo#mapleader .'w :<C-U>call ttodo#ftplugin#MarkDue("w", v:count1)<cr>'
 exec 'nnoremap <buffer>' g:ttodo#mapleader .'x :<C-U>call ttodo#ftplugin#MarkDone(v:count)<cr>'
 exec 'nnoremap <buffer>' g:ttodo#mapleader .'y :<C-U>call ttodo#ftplugin#SetPriority(v:count)<cr>'
+exec 'nnoremap <buffer>' g:ttodo#mapleader .'l :<C-U>call ttodo#ftplugin#Log()<cr>'
 
 exec 'nnoremap <buffer>' g:ttodo#mapleader .'/ :<C-U>Ttodogrep <c-r><c-w><cr>'
 exec 'xnoremap <buffer>' g:ttodo#mapleader .'/ y:<C-U>Ttodogrep <c-r>0<cr>'
