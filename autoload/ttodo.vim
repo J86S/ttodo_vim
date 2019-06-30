@@ -227,6 +227,7 @@ let s:list_env['key_map'] = {
             \             4 : {'key': 4, 'agent': 'ttodo#ftplugin#Agent', 'args': ['ttodo#ftplugin#MarkDue', 'd', '\=ttodo#InputNumber("Number of days: ")'], 'key_name': '<c-d>', 'help': 'Mark as due in N days'},
             \             23 : {'key': 23, 'agent': 'ttodo#ftplugin#Agent', 'args': ['ttodo#ftplugin#MarkDue', 'w', '\=ttodo#InputNumber("Number of weeks: ")'], 'key_name': '<c-w>', 'help': 'Mark as due in N weeks'},
             \             25 : {'key': 25, 'agent': 'ttodo#ftplugin#Agent', 'args': ['ttodo#ftplugin#SetPriority', 0, '\=tlib#string#Input("New task category [A-Z]: ")'], 'key_name': '<c-y>', 'help': 'Change task category'},
+            \             21 : {'key': 21, 'agent': 'ttodo#ftplugin#Agent', 'args': ['ttodo#ftplugin#Log'], 'key_name': '<c-l>', 'help': 'Log message'},
             \     }
             \ }
 
