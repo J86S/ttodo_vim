@@ -11,36 +11,7 @@ if !exists('g:ttodo#ftplugin#edit_note')
 endif
 " }}}
 
-function! ttodo#note#New(task) abort
-	"Tlibtrace 'ttodo', a:task
-	let path = s:generate_path(a:task)
-	call tlib#dir#Ensure(fnamemodify(path, ':p:h'))
-	let msg = s:initial_message(a:task)
-	call s:write_note(a:task,msg)
-
-	if !empty(g:ttodo#ftplugin#edit_note)
-		silent exec g:ttodo#ftplugin#edit_note fnameescape(path)
-	endif
-endfun
-
-function! ttodo#note#Exists(task) abort
-	let path = s:generate_path(a:task)
-	return filereadable(path)
-endfunction
-
-function! ttodo#note#Log(task) abort
-	let log = tlib#string#Input('message: ')
-	let timestamp = strftime("%T@%d-%m-%Y")
-	let msg = timestamp . ": " . log
-	call s:write_note(a:task,[msg])
-endfunction
-
-function! s:write_note(task,msg) abort
-	let path = s:generate_path(a:task)
-	call writefile(a:msg,fnameescape(path),"a")
-endfunction
-
-function! s:initial_message(task)
+function! ttodo#note#InitialMessage(task)
 	let id = get(a:task,"id","none")
 	let timestamp = strftime('%d-%m-%Y %I:%M %p')
 	
@@ -50,6 +21,42 @@ function! s:initial_message(task)
 				\    '---'
 				\]
   return msg
+endfunction
+
+function! ttodo#note#New(task) abort
+	"Tlibtrace 'ttodo', a:task
+	let path = s:generate_path(a:task)
+	call tlib#dir#Ensure(fnamemodify(path, ':p:h'))
+endfun
+
+function! ttodo#note#Exists(task) abort
+	let path = s:generate_path(a:task)
+	return filereadable(path)
+endfunction
+
+function! ttodo#note#Log(task,msg) abort
+	let timestamp = strftime("%T@%d-%m-%Y")
+	let log = timestamp . ": " . a:msg
+	call s:write_note(a:task,[log])
+endfunction
+
+function! ttodo#note#View(task) abort "{{{3
+	let path = s:generate_path(a:task)
+
+	if !filereadable(path)
+		throw 'Cannot read note'
+	endif
+
+	let cmd = g:ttodo#ftplugin#edit_note . ' ' . path
+
+	exe cmd
+
+endf
+"}}}
+
+function! s:write_note(task,msg) abort
+	let path = s:generate_path(a:task)
+	call writefile(a:msg,fnameescape(path),"a")
 endfunction
 
 function! s:generate_path(task) abort

@@ -15,39 +15,40 @@ if !exists('g:ttodo#ftplugin#add_at_eof')
 endif
 
 
-if !exists('g:ttodo#ftplugin#rec_copy')
+if !exists('g:ttodo#ftplugin#rec_copy') "{{{2
   " OPTION: rec_copy:VALUE
   "
   " If true, marking a recurring task as "done" will mark the old task 
   " as completed and will then create a new updated task.
-  let g:ttodo#ftplugin#rec_copy = 1   "{{{2
+  let g:ttodo#ftplugin#rec_copy = 1
 endif
+"}}}
 
-
-if !exists('g:ttodo#ftplugin#new_subtask_copy_pri')
+if !exists('g:ttodo#ftplugin#new_subtask_copy_pri') "{{{2
   " OPTION: new_subtask_copy_pri:VALUE
   "
   " If true, copy the parent task's priority when creating subtasks.
-  let g:ttodo#ftplugin#new_subtask_copy_pri = 0   "{{{2
+  let g:ttodo#ftplugin#new_subtask_copy_pri = 0   
 endif
+"}}}
 
-
-if !exists('g:ttodo#ftplugin#new_with_creation_date')
-  " OPTION: new_with_creation_date:VALUE
-  let g:ttodo#ftplugin#new_with_creation_date = 1   "{{{2
+if !exists('g:ttodo#ftplugin#new_with_creation_date') "{{{2
+  "OPTION: new_with_creation_date:VALUE
+  let g:ttodo#ftplugin#new_with_creation_date = 1   
 endif
+"}}}
 
-
-if !exists('g:ttodo#ftplugin#new_default_priority')
+if !exists('g:ttodo#ftplugin#new_default_priority') "{{{2
   " OPTION: new_default_priority:VALUE
-  let g:ttodo#ftplugin#new_default_priority = 'C'   "{{{2
+  let g:ttodo#ftplugin#new_default_priority = 'C'   
 endif
+"}}}
 
 
-if !exists('g:ttodo#ftplugin#done_filename_rewrite_expr')
-  let g:ttodo#ftplugin#done_filename_rewrite_expr = 'substitute(%s, ''\<todo\(_.\{-}\)\?\.txt$'', ''done\1.txt'', '''')'   "{{{2
+if !exists('g:ttodo#ftplugin#done_filename_rewrite_expr')  "{{{2
+  let g:ttodo#ftplugin#done_filename_rewrite_expr = 'substitute(%s, ''\<todo\(_.\{-}\)\?\.txt$'', ''done\1.txt'', '''')' 
 endif
-
+"}}}
 
 function! ttodo#ftplugin#Archive(filename) abort "{{{3
   let basename = fnamemodify(a:filename, ':t')
@@ -113,16 +114,53 @@ function! ttodo#ftplugin#Note() abort "{{{3
 		echohl WarningMsg
 		throw 'Ttodo: Task note already exists'
 		echohl NONE
-	else
-		call ttodo#note#New(task)
 	endif
+
+	call ttodo#note#New(task)
+	let msg = ttodo#note#InitialMessage(task)
+	call ttodo#note#Log(task,msg)
+
+	if !empty(g:ttodo#ftplugin#edit_note)
+		silent exec g:ttodo#ftplugin#edit_note fnameescape(path)
+	endif
+
 endf
 
+function! ttodo#ftplugin#ViewNote() abort "{{{3
+	let line = getline('.')
+	let task = ttodo#ParseTask(line,expand('%:p'))
+
+	if !ttodo#note#Exists(task)
+		call ttodo#noteNew(task)
+	endif
+
+	call ttodo#note#View(task)
+endf
+"]}}
+
 function! ttodo#ftplugin#Log() abort "{{{3
+	let msg = tlib#string#Input("message: ")
   let line = getline('.')
   let task = ttodo#ParseTask(line, expand('%:p'))
-  call ttodo#note#Log(task)
+	if !ttodo#note#Exists(task)
+		call ttodo#note#New(task)
+	endif
+  call ttodo#note#Log(task,msg)
 endf
+
+function! ttodo#ftplugin#YankId() abort "{{{3
+	let line = getline(".")
+	let task = ttodo#ParseTask(line,expand('%:p'))
+
+	let id = get(task,'id','UNK')
+	
+	if id ==# 'UNK'
+		throw 'Task does not have ID'
+	endif
+
+	let @+ = id
+endf
+"}}}
 
 " Values for copytags:
 "   1 ... Copy tags
@@ -216,6 +254,7 @@ function! ttodo#ftplugin#New(move, copytags, mode, ...) abort "{{{3
     endif
   endif
 endf
+"}}}
 
 
 function! s:MaybeCopyPriority(task, text) abort "{{{3
