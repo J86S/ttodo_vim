@@ -36,7 +36,7 @@ endfunction
 
 function! ttodo#note#Log(task,msg) abort
 	let timestamp = strftime("%T@%d-%m-%Y")
-	let log = timestamp . ": " . a:msg
+	let log = timestamp . ":" . a:msg
 	call s:write_note(a:task,[log])
 endfunction
 
@@ -66,7 +66,11 @@ function! s:generate_path(task) abort
 		throw 'Ttodo: Task must have id'
 		echohl NONE
 	endif
-	let dir = expand('%:p:h')
-	let path = tlib#file#Join([dir,"notes",id . ".md"])
-	return path
+	let target = fnamemodify(get(a:task,'file','UNK'),':p:h')
+	
+	if target ==# 'UNK'
+		throw 'Cannot get File'
+	endif
+
+	return tlib#file#Join([target,"notes",id . ".md"])
 endfun

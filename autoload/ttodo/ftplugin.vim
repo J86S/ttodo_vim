@@ -131,7 +131,7 @@ function! ttodo#ftplugin#ViewNote() abort "{{{3
 	let task = ttodo#ParseTask(line,expand('%:p'))
 
 	if !ttodo#note#Exists(task)
-		call ttodo#noteNew(task)
+		call ttodo#ftplugin#Note()
 	endif
 
 	call ttodo#note#View(task)
@@ -142,9 +142,11 @@ function! ttodo#ftplugin#Log() abort "{{{3
 	let msg = tlib#string#Input("message: ")
   let line = getline('.')
   let task = ttodo#ParseTask(line, expand('%:p'))
+
 	if !ttodo#note#Exists(task)
 		call ttodo#note#New(task)
 	endif
+
   call ttodo#note#Log(task,msg)
 endf
 
