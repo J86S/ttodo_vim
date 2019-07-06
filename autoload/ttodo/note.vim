@@ -27,6 +27,8 @@ function! ttodo#note#New(task) abort
 	"Tlibtrace 'ttodo', a:task
 	let path = s:generate_path(a:task)
 	call tlib#dir#Ensure(fnamemodify(path, ':p:h'))
+	let msg = ttodo#note#InitialMessage(a:task)
+	call writefile(msg,fnameescape(path))
 endfun
 
 function! ttodo#note#Exists(task) abort
@@ -47,10 +49,7 @@ function! ttodo#note#View(task) abort "{{{3
 		throw 'Cannot read note'
 	endif
 
-	let cmd = g:ttodo#ftplugin#edit_note . ' ' . path
-
-	exe cmd
-
+	exe g:ttodo#ftplugin#edit_note . ' ' . path
 endf
 "}}}
 

@@ -117,13 +117,6 @@ function! ttodo#ftplugin#Note() abort "{{{3
 	endif
 
 	call ttodo#note#New(task)
-	let msg = ttodo#note#InitialMessage(task)
-	call ttodo#note#Log(task,msg)
-
-	if !empty(g:ttodo#ftplugin#edit_note)
-		silent exec g:ttodo#ftplugin#edit_note fnameescape(path)
-	endif
-
 endf
 
 function! ttodo#ftplugin#ViewNote() abort "{{{3
