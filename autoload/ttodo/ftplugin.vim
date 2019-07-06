@@ -100,7 +100,6 @@ function! ttodo#ftplugin#Archive(filename) abort "{{{3
   endif
 endf
 
-
 function! ttodo#ftplugin#ArchiveCurrentBuffer() abort "{{{3
   update
   call ttodo#ftplugin#Archive(expand('%:p'))
@@ -110,26 +109,13 @@ endf
 function! ttodo#ftplugin#Note() abort "{{{3
   let line = getline('.')
   let task = ttodo#ParseTask(line, expand('%:p'))
-	if ttodo#note#Exists(task)
-		echohl WarningMsg
-		throw 'Ttodo: Task note already exists'
-		echohl NONE
-	endif
-
-	call ttodo#note#New(task)
-endf
-
-function! ttodo#ftplugin#ViewNote() abort "{{{3
-	let line = getline('.')
-	let task = ttodo#ParseTask(line,expand('%:p'))
 
 	if !ttodo#note#Exists(task)
-		call ttodo#ftplugin#Note()
+		call ttodo#note#New(task)
 	endif
 
 	call ttodo#note#View(task)
 endf
-"]}}
 
 function! ttodo#ftplugin#Log() abort "{{{3
 	let msg = tlib#string#Input("message: ")

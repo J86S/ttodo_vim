@@ -29,7 +29,6 @@ exec 'nnoremap <buffer>' g:ttodo#mapleader .'x :<C-U>call ttodo#ftplugin#MarkDon
 exec 'nnoremap <buffer>' g:ttodo#mapleader .'y :<C-U>call ttodo#ftplugin#SetPriority(v:count)<cr>'
 exec 'nnoremap <buffer>' g:ttodo#mapleader .'l :<C-U>call ttodo#ftplugin#Log()<cr>'
 exec 'nnoremap <buffer>' g:ttodo#mapleader .', :<C-U>call ttodo#ftplugin#YankId()<cr>'
-exec 'nnoremap <buffer>' g:ttodo#mapleader .'v :<C-U>call ttodo#ftplugin#ViewNote()<cr>'
 
 exec 'nnoremap <buffer>' g:ttodo#mapleader .'/ :<C-U>Ttodogrep <c-r><c-w><cr>'
 exec 'xnoremap <buffer>' g:ttodo#mapleader .'/ y:<C-U>Ttodogrep <c-r>0<cr>'
