@@ -127,6 +127,7 @@ function! ttodo#ftplugin#Log() abort "{{{3
 	endif
 
   call ttodo#note#Log(task,msg)
+	call ttodo#util#LastUpdate()
 endf
 
 function! ttodo#ftplugin#YankId() abort "{{{3

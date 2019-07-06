@@ -156,6 +156,7 @@ if !exists('g:ttodo#parse_rx')
                 \ 'dep': '\<dep:\zs\w\+',
                 \ 'subtask?': '^\s\+',
                 \ 'created': '^\C\%(x\s\+'. g:tlib#date#date_rx .'\s\+\)\?\%((\u)\s\+\)\?\zs'. g:tlib#date#date_rx,
+                \ 'lu': '^\C\%(x\s\+'. g:tlib#date#date_rx .'\s\+\)\?\%((\u)\s\+\)\?\zs'. g:tlib#date#date_rx,
                 \ 'due': '\<due:\zs\%(today\|'. g:tlib#date#date_rx .'\|[0-9]\+[dwmy]\)\>',
                 \ 't': '\<t:\zs\%(-\d\+[d]\|'. g:tlib#date#date_rx .'\)\>',
                 \ 'pri': '^\s*(\zs\u\ze)',
