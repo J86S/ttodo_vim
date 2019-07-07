@@ -126,7 +126,8 @@ function! ttodo#ftplugin#Log() abort "{{{3
 		call ttodo#note#New(task)
 	endif
 
-  call ttodo#note#Log(task,msg)
+	let note_path = ttodo#note#Path(task)
+  call ttodo#log#Simple(note_path,msg)
 	call ttodo#util#LastUpdate()
 endf
 

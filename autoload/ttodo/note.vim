@@ -11,7 +11,33 @@ if !exists('g:ttodo#ftplugin#edit_note')
 endif
 " }}}
 
-function! ttodo#note#InitialMessage(task)
+function! ttodo#note#New(task) abort "{{{
+	"Tlibtrace 'ttodo', a:task
+	let path = ttodo#note#Path(a:task)
+	call tlib#dir#Ensure(fnamemodify(path, ':p:h'))
+	let msg = ttodo#note#InitialMessage(a:task)
+	call writefile(msg,fnameescape(path))
+endfun
+"}}}
+
+function! ttodo#note#Exists(task) abort "{{{
+	let path = ttodo#note#Path(a:task)
+	return filereadable(path)
+endfunction
+"}}}
+
+function! ttodo#note#View(task) abort "{{{2
+	let path = ttodo#note#Path(a:task)
+
+	if !filereadable(path)
+		throw 'Cannot read note'
+	endif
+
+	exe g:ttodo#ftplugin#edit_note . ' ' . path
+endf
+"}}}
+
+function! ttodo#note#InitialMessage(task) " {{{2
 	let id = get(a:task,"id","none")
 	let timestamp = strftime('%d-%m-%Y %I:%M %p')
 	
@@ -22,43 +48,9 @@ function! ttodo#note#InitialMessage(task)
 				\]
   return msg
 endfunction
-
-function! ttodo#note#New(task) abort
-	"Tlibtrace 'ttodo', a:task
-	let path = s:generate_path(a:task)
-	call tlib#dir#Ensure(fnamemodify(path, ':p:h'))
-	let msg = ttodo#note#InitialMessage(a:task)
-	call writefile(msg,fnameescape(path))
-endfun
-
-function! ttodo#note#Exists(task) abort
-	let path = s:generate_path(a:task)
-	return filereadable(path)
-endfunction
-
-function! ttodo#note#Log(task,msg) abort
-	let timestamp = strftime("%T@%d-%m-%Y")
-	let log = timestamp . ":" . a:msg
-	call s:write_note(a:task,[log])
-endfunction
-
-function! ttodo#note#View(task) abort "{{{3
-	let path = s:generate_path(a:task)
-
-	if !filereadable(path)
-		throw 'Cannot read note'
-	endif
-
-	exe g:ttodo#ftplugin#edit_note . ' ' . path
-endf
 "}}}
 
-function! s:write_note(task,msg) abort
-	let path = s:generate_path(a:task)
-	call writefile(a:msg,fnameescape(path),"a")
-endfunction
-
-function! s:generate_path(task) abort
+function! ttodo#note#Path(task) abort "{{{2
 	let id = get(a:task,"id","none")
 	if id == "none"
 		echohl WarningMsg
@@ -73,3 +65,5 @@ function! s:generate_path(task) abort
 
 	return tlib#file#Join([target,"notes",id . ".md"])
 endfun
+"}}}
+
